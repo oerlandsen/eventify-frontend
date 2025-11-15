@@ -1,0 +1,123 @@
+import React, { useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
+
+import LoginScreen from './screens/LoginScreen';
+import HomeScreen from './screens/HomeScreen';
+import EventsScreen from './screens/EventsScreen';
+import SearchScreen from './screens/SearchScreen';
+import NotificationsScreen from './screens/NotificationsScreen';
+import ProfileScreen from './screens/ProfileScreen';
+import EventDetailScreen from './screens/EventDetailScreen';
+import VenueScreen from './screens/VenueScreen';
+
+const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
+
+function HomeStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="HomeMain" component={HomeScreen} />
+      <Stack.Screen name="EventDetail" component={EventDetailScreen} />
+      <Stack.Screen name="VenueScreen" component={VenueScreen} />
+    </Stack.Navigator>
+  );
+}
+
+function EventsStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="EventsMain" component={EventsScreen} />
+      <Stack.Screen name="EventDetail" component={EventDetailScreen} />
+      <Stack.Screen name="VenueScreen" component={VenueScreen} />
+    </Stack.Navigator>
+  );
+}
+
+function SearchStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="SearchMain" component={SearchScreen} />
+      <Stack.Screen name="EventDetail" component={EventDetailScreen} />
+      <Stack.Screen name="VenueScreen" component={VenueScreen} />
+    </Stack.Navigator>
+  );
+}
+
+function NotificationsStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="NotificationsMain" component={NotificationsScreen} />
+      <Stack.Screen name="EventDetail" component={EventDetailScreen} />
+      <Stack.Screen name="VenueScreen" component={VenueScreen} />
+    </Stack.Navigator>
+  );
+}
+
+
+function ProfileStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="ProfileMain" component={ProfileScreen} />
+    </Stack.Navigator>
+  );
+}
+
+function MainTabs() {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarActiveTintColor: '#9B5DE5',
+        tabBarInactiveTintColor: '#ccc',
+        tabBarStyle: {
+          backgroundColor: '#1C0A3E',
+          borderTopWidth: 0,
+        },
+        tabBarIcon: ({ color, size }) => {
+          switch (route.name) {
+            case 'Home':
+              return <Ionicons name="map-outline" size={size} color={color} />;
+            case 'Events':
+              return <MaterialCommunityIcons name="calendar-multiselect" size={size} color={color} />;
+            case 'Search':
+              return <Feather name="search" size={size} color={color} />;
+            case 'Notifications':
+              return <Ionicons name="notifications-outline" size={size} color={color} />;
+            case 'Profile':
+              return <Ionicons name="person-outline" size={size} color={color} />;
+            default:
+              return null;
+          }
+        },
+      })}
+    >
+      <Tab.Screen name="Home" component={HomeStack} options={{ tabBarLabel: 'Mapa' }} />
+      <Tab.Screen name="Events" component={EventsStack} options={{ tabBarLabel: 'Eventos' }} />
+      <Tab.Screen name="Search" component={SearchStack} options={{ tabBarLabel: 'Explora' }} />
+      <Tab.Screen name="Notifications" component={NotificationsStack} options={{ tabBarLabel: 'Notificaciones' }} />
+      <Tab.Screen name="Profile" component={ProfileStack} options={{ tabBarLabel: 'Perfil' }} />
+    </Tab.Navigator>
+  );
+}
+
+export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {!isLoggedIn ? (
+          <Stack.Screen
+            name="Login"
+            component={(props) => <LoginScreen {...props} onLogin={() => setIsLoggedIn(true)} />}
+          />
+        ) : (
+          <Stack.Screen name="MainTabs" component={MainTabs} />
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
